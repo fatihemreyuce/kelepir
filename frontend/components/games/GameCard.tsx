@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import type { SearchItem } from '@/lib/games-api';
+import { initialOf } from '@/lib/format';
 
 export function GameCard({ item }: { item: SearchItem }) {
-  const initial = item.title.trim().charAt(0).toUpperCase();
+  const initial = initialOf(item.title);
   return (
     <Link
       href={`/oyun/${item.itadId}`}

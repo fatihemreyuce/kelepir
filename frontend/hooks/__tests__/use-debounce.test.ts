@@ -18,6 +18,8 @@ describe('useDebounce', () => {
     );
     rerender({ v: 'ab' });
     expect(result.current).toBe('a'); // henüz gecikme dolmadı
+    // act() ile sarmalıyoruz: sahte zamanlayıcıyı ilerletmek state güncellemesi
+    // tetikler, bu güncelleme React'in batch'i içinde flush edilmeli.
     act(() => {
       vi.advanceTimersByTime(300);
     });

@@ -29,5 +29,7 @@ export const gamesApi = {
   search: (q: string) =>
     api<SearchItem[]>(`/games/search?q=${encodeURIComponent(q)}`),
   prices: (itadId: string, region: string) =>
-    api<GamePrices>(`/games/${itadId}/prices?region=${region}`),
+    api<GamePrices>(
+      `/games/${encodeURIComponent(itadId)}/prices?region=${encodeURIComponent(region)}`,
+    ),
 };

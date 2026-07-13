@@ -1,5 +1,5 @@
 import { GameDetail } from './GameDetail';
-import { DEFAULT_REGION } from '@/lib/regions';
+import { DEFAULT_REGION, REGIONS } from '@/lib/regions';
 
 export default function GameDetailPage({
   params,
@@ -8,6 +8,7 @@ export default function GameDetailPage({
   params: { itadId: string };
   searchParams: { region?: string };
 }) {
-  const region = searchParams.region ?? DEFAULT_REGION;
+  const raw = searchParams.region ?? DEFAULT_REGION;
+  const region = REGIONS.some((r) => r.code === raw) ? raw : DEFAULT_REGION;
   return <GameDetail itadId={params.itadId} region={region} />;
 }

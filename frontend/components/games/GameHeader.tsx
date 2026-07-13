@@ -1,4 +1,5 @@
 import { RegionSelect } from './RegionSelect';
+import { initialOf } from '@/lib/format';
 
 export function GameHeader({
   title,
@@ -11,7 +12,7 @@ export function GameHeader({
   region: string;
   onRegionChange: (code: string) => void;
 }) {
-  const initial = title.trim().charAt(0).toUpperCase();
+  const initial = initialOf(title);
   return (
     <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
       <div className="flex items-center gap-4">
