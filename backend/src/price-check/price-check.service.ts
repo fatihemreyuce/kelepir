@@ -17,8 +17,12 @@ export class PriceCheckService {
 
   @Cron('0 9,21 * * *')
   async handleCron(): Promise<void> {
-    const { checked, triggered } = await this.checkAllAlerts();
-    this.logger.log(`Fiyat kontrolü: ${checked} alarm tarandı, ${triggered} tetiklendi`);
+    try {
+      const { checked, triggered } = await this.checkAllAlerts();
+      this.logger.log(`Fiyat kontrolü: ${checked} alarm tarandı, ${triggered} tetiklendi`);
+    } catch (err) {
+      this.logger.error(`Fiyat kontrolü cron hatası: ${(err as Error).message}`);
+    }
   }
 
   async checkAllAlerts(): Promise<{ checked: number; triggered: number }> {

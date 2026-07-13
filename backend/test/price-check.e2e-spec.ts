@@ -115,4 +115,12 @@ describe('PriceCheck (integration)', () => {
     expect(result.triggered).toBe(0);
     expect(mailMock.sendPriceAlert).not.toHaveBeenCalled();
   });
+
+  it('handleCron, checkAllAlerts reddedildiğinde hatayı yutar ve süreci çökertmez', async () => {
+    const spy = jest.spyOn(service, 'checkAllAlerts').mockRejectedValueOnce(new Error('boom'));
+
+    await expect(service.handleCron()).resolves.toBeUndefined();
+
+    spy.mockRestore();
+  });
 });
