@@ -88,4 +88,51 @@ describe('Auth (e2e)', () => {
     expect(res.body.email).toBe(email);
     expect(res.body).not.toHaveProperty('passwordHash');
   });
+
+  it('POST /auth/refresh geçerli refresh ile yeni token verir ve eskisini geçersizler', async () => {
+    const login = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email, password })
+      .expect(200);
+    const oldRefresh = login.body.refreshToken;
+
+    const refreshed = await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: oldRefresh })
+      .expect(200);
+    expect(typeof refreshed.body.accessToken).toBe('string');
+    expect(refreshed.body.refreshToken).not.toBe(oldRefresh);
+
+    // eski refresh token artık kullanılamaz (rotation)
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: oldRefresh })
+      .expect(401);
+  });
+
+  it('geçersiz refresh token 401 döner', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: 'gecersiz-token' })
+      .expect(401);
+  });
+
+  it("POST /auth/logout refresh token'ı geçersizler", async () => {
+    const login = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email, password })
+      .expect(200);
+    const refresh = login.body.refreshToken;
+
+    await request(app.getHttpServer())
+      .post('/auth/logout')
+      .send({ refreshToken: refresh })
+      .expect(200);
+
+    // logout sonrası refresh kullanılamaz
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: refresh })
+      .expect(401);
+  });
 });

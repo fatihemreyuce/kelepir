@@ -10,6 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { RefreshDto } from './dto/refresh.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthUser } from './types/jwt-payload';
 
@@ -32,5 +33,17 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   me(@Req() req: { user: AuthUser }) {
     return this.auth.me(req.user.userId);
+  }
+
+  @Post('refresh')
+  @HttpCode(200)
+  refresh(@Body() dto: RefreshDto) {
+    return this.auth.refresh(dto.refreshToken);
+  }
+
+  @Post('logout')
+  @HttpCode(200)
+  logout(@Body() dto: RefreshDto) {
+    return this.auth.logout(dto.refreshToken);
   }
 }

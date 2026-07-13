@@ -79,6 +79,39 @@ export class AuthService {
     return createHash('sha256').update(raw).digest('hex');
   }
 
+  async refresh(rawToken: string): Promise<AuthResult> {
+    const tokenHash = this.hashToken(rawToken);
+    const record = await this.prisma.refreshToken.findUnique({
+      where: { tokenHash },
+      include: { user: true },
+    });
+    if (
+      !record ||
+      record.revokedAt !== null ||
+      record.expiresAt.getTime() < Date.now()
+    ) {
+      throw new UnauthorizedException('Geçersiz refresh token');
+    }
+    // rotation: eskiyi revoke et
+    await this.prisma.refreshToken.update({
+      where: { id: record.id },
+      data: { revokedAt: new Date() },
+    });
+    return this.issueTokens({
+      id: record.user.id,
+      email: record.user.email,
+    });
+  }
+
+  async logout(rawToken: string): Promise<{ success: true }> {
+    const tokenHash = this.hashToken(rawToken);
+    await this.prisma.refreshToken.updateMany({
+      where: { tokenHash, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+    return { success: true };
+  }
+
   async me(
     userId: string,
   ): Promise<{ id: string; email: string; createdAt: Date }> {
