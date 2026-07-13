@@ -1,6 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GamesService } from './games.service';
 import { SearchQueryDto } from './dto/search-query.dto';
+import { PricesQueryDto } from './dto/prices-query.dto';
 
 @Controller('games')
 export class GamesController {
@@ -9,5 +10,10 @@ export class GamesController {
   @Get('search')
   search(@Query() query: SearchQueryDto) {
     return this.games.search(query.q);
+  }
+
+  @Get(':itadId/prices')
+  prices(@Param('itadId') itadId: string, @Query() query: PricesQueryDto) {
+    return this.games.getGamePrices(itadId, query.region);
   }
 }
