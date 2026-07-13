@@ -261,7 +261,9 @@ git commit -m "feat(backend): NestJS iskeleti + /health endpoint (Faz 1)"
 
 - [ ] **Step 1: Prisma paketlerini kur**
 
-Run: `cd backend && npm install prisma @prisma/client && npm install --save-dev @types/supertest`
+Run: `cd backend && npm install prisma@^6 @prisma/client@^6 && npm install --save-dev @types/supertest`
+
+> Not: Prisma 6.x pinlenir — 7.x `datasource.url` şema sözdizimini kaldırdı.
 (Not: supertest tipi Task 2 testinde de gerekebilir; burada garanti altına alınır.)
 
 - [ ] **Step 2: Prisma'yı başlat**
@@ -271,10 +273,10 @@ Expected: `backend/prisma/schema.prisma` ve `backend/.env` oluşur.
 
 - [ ] **Step 3: backend/.env içine DATABASE_URL yaz**
 
-`backend/.env` içeriğini şununla değiştir:
+`backend/.env` içeriğini şununla değiştir (host portu **5433**):
 
 ```
-DATABASE_URL="postgresql://kelepir:kelepir@localhost:5432/kelepir?schema=public"
+DATABASE_URL="postgresql://kelepir:kelepir@localhost:5433/kelepir?schema=public"
 ```
 
 - [ ] **Step 4: schema.prisma'yı yaz (5 model)**
