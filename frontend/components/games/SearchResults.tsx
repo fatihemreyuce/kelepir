@@ -6,10 +6,11 @@ import { GameCard } from './GameCard';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export function SearchResults({ query }: { query: string }) {
-  const enabled = query.trim().length >= 2;
+  const term = query.trim();
+  const enabled = term.length >= 2;
   const { data, isPending, isError, isFetching } = useQuery({
-    queryKey: ['search', query],
-    queryFn: () => gamesApi.search(query),
+    queryKey: ['search', term],
+    queryFn: () => gamesApi.search(term),
     enabled,
   });
 
