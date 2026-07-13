@@ -4,35 +4,48 @@ import {
   Get,
   HttpCode,
   Post,
-  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthUser } from './types/jwt-payload';
+import { setAuthCookies } from './auth.cookies';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   @Post('register')
-  register(@Body() dto: RegisterDto) {
-    return this.auth.register(dto);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.auth.register(dto);
+    setAuthCookies(res, result);
+    return result;
   }
 
   @Post('login')
   @HttpCode(200)
-  login(@Body() dto: LoginDto) {
-    return this.auth.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.auth.login(dto);
+    setAuthCookies(res, result);
+    return result;
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  me(@Req() req: { user: AuthUser }) {
-    return this.auth.me(req.user.userId);
+  me(@CurrentUser() user: AuthUser) {
+    return this.auth.me(user.userId);
   }
 
   @Post('refresh')
