@@ -55,7 +55,8 @@ export class AuthService {
       secret: this.config.accessSecret,
       // jsonwebtoken@9's expiresIn expects `StringValue` (ms package's strict
       // template-literal type), but our env-driven config is a plain string.
-      expiresIn: this.config.accessExpires as import('jsonwebtoken').SignOptions['expiresIn'],
+      expiresIn: this.config
+        .accessExpires as import('jsonwebtoken').SignOptions['expiresIn'],
     });
 
     const rawRefresh = randomBytes(32).toString('hex');
@@ -76,5 +77,15 @@ export class AuthService {
 
   hashToken(raw: string): string {
     return createHash('sha256').update(raw).digest('hex');
+  }
+
+  async me(
+    userId: string,
+  ): Promise<{ id: string; email: string; createdAt: Date }> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { id: true, email: true, createdAt: true },
+    });
+    return user;
   }
 }

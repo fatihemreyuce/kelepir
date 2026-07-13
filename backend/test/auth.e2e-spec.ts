@@ -15,7 +15,9 @@ describe('Auth (e2e)', () => {
       imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, transform: true }),
+    );
     prisma = app.get(PrismaService);
     await app.init();
     await prisma.refreshToken.deleteMany({ where: { user: { email } } });
@@ -67,5 +69,23 @@ describe('Auth (e2e)', () => {
       .post('/auth/login')
       .send({ email, password: 'wrongpassword1' })
       .expect(401);
+  });
+
+  it('GET /auth/me token olmadan 401 döner', async () => {
+    await request(app.getHttpServer()).get('/auth/me').expect(401);
+  });
+
+  it('GET /auth/me geçerli access token ile kullanıcıyı döner', async () => {
+    const login = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email, password })
+      .expect(200);
+    const token = login.body.accessToken;
+    const res = await request(app.getHttpServer())
+      .get('/auth/me')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+    expect(res.body.email).toBe(email);
+    expect(res.body).not.toHaveProperty('passwordHash');
   });
 });
