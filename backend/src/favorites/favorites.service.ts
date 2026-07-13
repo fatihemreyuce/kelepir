@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -25,10 +26,20 @@ export class FavoritesService {
     if (existing) {
       throw new ConflictException('Bu oyun zaten favorilerde');
     }
-    return this.prisma.favorite.create({
-      data: { userId, gameId },
-      include: { game: true },
-    });
+    try {
+      return await this.prisma.favorite.create({
+        data: { userId, gameId },
+        include: { game: true },
+      });
+    } catch (err: unknown) {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException('Bu oyun zaten favorilerde');
+      }
+      throw err;
+    }
   }
 
   async list(userId: string) {
