@@ -83,4 +83,76 @@ describe('ItadClient', () => {
     fetchMock.mockResolvedValue({ ok: false, status: 429 } as Response);
     await expect(client.searchGames('x')).rejects.toThrow();
   });
+
+  it('getGameInfo doğru URL çağırır ve sonucu map\'ler', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'uuid-9',
+        slug: 'g-nine',
+        title: 'Game Nine',
+        assets: { boxart: 'http://box' },
+      }),
+    } as Response);
+
+    const res = await client.getGameInfo('uuid-9');
+
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    expect(calledUrl).toContain('/games/info/v2');
+    expect(calledUrl).toContain('id=uuid-9');
+    expect(calledUrl).toContain('key=test-key');
+    expect(res).toEqual({
+      id: 'uuid-9',
+      slug: 'g-nine',
+      title: 'Game Nine',
+      cover: 'http://box',
+    });
+  });
+
+  it('getGameInfo 404 durumunda null döner', async () => {
+    fetchMock.mockResolvedValue({ ok: false, status: 404 } as Response);
+
+    const res = await client.getGameInfo('nope');
+
+    expect(res).toBeNull();
+  });
+
+  it('getPrices bozuk deal girdilerini atlar, hata fırlatmaz', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => [
+        {
+          id: 'uuid-1',
+          deals: [
+            {
+              shop: { id: 61, name: 'Steam' },
+              price: { amount: 149.99, currency: 'TRY' },
+              regular: { amount: 299.99, currency: 'TRY' },
+              cut: 50,
+              url: 'http://steam/app',
+            },
+            {
+              shop: { id: 62, name: 'GOG' },
+              cut: 10,
+              url: 'http://gog/app',
+            },
+          ],
+        },
+      ],
+    } as Response);
+
+    const res = await client.getPrices(['uuid-1'], 'TR');
+
+    expect(res.get('uuid-1')).toEqual([
+      {
+        shopId: 61,
+        shopName: 'Steam',
+        price: 149.99,
+        currency: 'TRY',
+        regular: 299.99,
+        cut: 50,
+        url: 'http://steam/app',
+      },
+    ]);
+  });
 });

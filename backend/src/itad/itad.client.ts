@@ -104,15 +104,17 @@ export class ItadClient {
     for (const entry of data) {
       map.set(
         entry.id,
-        (entry.deals ?? []).map((d) => ({
-          shopId: d.shop.id,
-          shopName: d.shop.name,
-          price: d.price.amount,
-          currency: d.price.currency,
-          regular: d.regular?.amount ?? d.price.amount,
-          cut: d.cut,
-          url: d.url,
-        })),
+        (entry.deals ?? [])
+          .filter((d) => d.shop && d.price)
+          .map((d) => ({
+            shopId: d.shop.id,
+            shopName: d.shop.name,
+            price: d.price.amount,
+            currency: d.price.currency,
+            regular: d.regular?.amount ?? d.price.amount,
+            cut: d.cut,
+            url: d.url,
+          })),
       );
     }
     return map;
