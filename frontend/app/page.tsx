@@ -1,3 +1,6 @@
+import { Suspense } from 'react';
+import { SearchBox } from '@/components/games/SearchBox';
+
 export default function HomePage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-24">
@@ -10,6 +13,9 @@ export default function HomePage() {
       <p className="mt-4 max-w-md text-lg text-muted-2">
         En ucuzu bul. Kelepiri kaçırma.
       </p>
+      <Suspense fallback={null}>
+        <SearchBox />
+      </Suspense>
     </main>
   );
 }
