@@ -4,6 +4,7 @@ import { HealthController } from './health/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { GamesModule } from './games/games.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { GamesModule } from './games/games.module';
     PrismaModule,
     AuthModule,
     GamesModule,
+    FavoritesModule,
   ],
   controllers: [HealthController],
   providers: [],
