@@ -4,10 +4,12 @@ import {
   Get,
   HttpCode,
   Post,
+  Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -15,7 +17,7 @@ import { RefreshDto } from './dto/refresh.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthUser } from './types/jwt-payload';
-import { setAuthCookies } from './auth.cookies';
+import { setAuthCookies, clearAuthCookies } from './auth.cookies';
 
 @Controller('auth')
 export class AuthController {
@@ -50,13 +52,36 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
-  refresh(@Body() dto: RefreshDto) {
-    return this.auth.refresh(dto.refreshToken);
+  async refresh(
+    @Req() req: Request,
+    @Body() dto: RefreshDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token =
+      (req.cookies as Record<string, string> | undefined)?.refresh_token ??
+      dto.refreshToken;
+    if (!token) {
+      throw new UnauthorizedException('Refresh token yok');
+    }
+    const result = await this.auth.refresh(token);
+    setAuthCookies(res, result);
+    return result;
   }
 
   @Post('logout')
   @HttpCode(200)
-  logout(@Body() dto: RefreshDto) {
-    return this.auth.logout(dto.refreshToken);
+  async logout(
+    @Req() req: Request,
+    @Body() dto: RefreshDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token =
+      (req.cookies as Record<string, string> | undefined)?.refresh_token ??
+      dto.refreshToken;
+    clearAuthCookies(res);
+    if (!token) {
+      return { success: true };
+    }
+    return this.auth.logout(token);
   }
 }

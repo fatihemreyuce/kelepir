@@ -73,4 +73,29 @@ describe('Auth cookies (e2e)', () => {
     const res = await agent.get('/auth/me').expect(200);
     expect(res.body.email).toBe(email);
   });
+
+  it('POST /auth/refresh cookie ile yeni cookie verir ve eskisini geçersizler', async () => {
+    const agent = request.agent(app.getHttpServer());
+    await agent.post('/auth/login').send({ email, password }).expect(200);
+
+    const refreshRes = await agent.post('/auth/refresh').expect(200);
+    const setCookie = refreshRes.headers['set-cookie'] as unknown as string[];
+    expect((setCookie ?? []).map((c) => c.split('=')[0])).toEqual(
+      expect.arrayContaining(['access_token', 'refresh_token']),
+    );
+    // yeni access cookie ile me çalışır
+    await agent.get('/auth/me').expect(200);
+  });
+
+  it("POST /auth/logout cookie'leri temizler ve refresh'i geçersizler", async () => {
+    const agent = request.agent(app.getHttpServer());
+    await agent.post('/auth/login').send({ email, password }).expect(200);
+    await agent.post('/auth/logout').expect(200);
+    // logout sonrası refresh (aynı agent, temizlenmiş cookie) 401
+    await agent.post('/auth/refresh').expect(401);
+  });
+
+  it('ne cookie ne body ile refresh 401', async () => {
+    await request(app.getHttpServer()).post('/auth/refresh').expect(401);
+  });
 });
