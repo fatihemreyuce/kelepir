@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id           String       @id @default(cuid())
-  email        String       @unique
-  passwordHash String?
-  googleId     String?      @unique
-  createdAt    DateTime     @default(now())
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String?
+  googleId      String?        @unique
+  createdAt     DateTime       @default(now())
 
-  favorites    Favorite[]
-  alerts       PriceAlert[]
+  favorites     Favorite[]
+  alerts        PriceAlert[]
+  refreshTokens RefreshToken[]
 }
 
 model Game {
@@ -66,4 +67,16 @@ model PriceSnapshot {
   fetchedAt DateTime @default(now())
 
   @@index([gameId, fetchedAt])
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
