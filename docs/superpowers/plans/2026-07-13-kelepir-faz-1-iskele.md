@@ -17,8 +17,10 @@
 - `.env` git'e girmez; her yeni env değişkeni aynı anda `.env.example`'a eklenir
 - Frontend URL'leri Türkçe (`/oyun/[slug]` vb. — sonraki fazlar)
 - Görsel dil: koyu zemin + yeşil "en ucuz" vurgusu (detay sonraki fazlar)
-- DB kimlik: user `kelepir`, password `kelepir`, db `kelepir`, port `5432`
-- `DATABASE_URL="postgresql://kelepir:kelepir@localhost:5432/kelepir?schema=public"`
+- DB kimlik: user `kelepir`, password `kelepir`, db `kelepir`
+- Port eşlemesi: container içi `5432`, **host portu `5433`** (yerel Postgres 15 servisi 5432'yi tuttuğu için çakışmayı önlemek üzere değiştirildi)
+- `DATABASE_URL="postgresql://kelepir:kelepir@localhost:5433/kelepir?schema=public"`
+- Prisma sürümü: **6.x** (7.x `datasource.url` şema sözdizimini kaldırdı) — `prisma@^6` + `@prisma/client@^6`
 
 ---
 
