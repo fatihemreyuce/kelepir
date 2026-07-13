@@ -29,6 +29,7 @@ model Game {
 
   favorites Favorite[]
   alerts    PriceAlert[]
+  snapshots PriceSnapshot[]
 }
 
 model Favorite {
@@ -59,6 +60,7 @@ model PriceAlert {
 model PriceSnapshot {
   id        String   @id @default(cuid())
   gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
   store     String
   price     Decimal
   discount  Int
