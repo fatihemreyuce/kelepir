@@ -65,4 +65,12 @@ describe('Auth cookies (e2e)', () => {
       expect.arrayContaining(['access_token', 'refresh_token']),
     );
   });
+
+  it('GET /auth/me yalnızca cookie ile (Bearer olmadan) çalışır', async () => {
+    const agent = request.agent(app.getHttpServer());
+    await agent.post('/auth/login').send({ email, password }).expect(200);
+    // agent cookie'leri saklar; Authorization header YOK
+    const res = await agent.get('/auth/me').expect(200);
+    expect(res.body.email).toBe(email);
+  });
 });
