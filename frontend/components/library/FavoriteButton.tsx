@@ -6,24 +6,32 @@ import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/auth-context';
 import { useFavorites } from '@/hooks/use-favorites';
+import { ApiError } from '@/lib/api';
 
 export function FavoriteButton({ itadId }: { itadId: string }) {
   const { user } = useAuth();
   const { favorites, addFavorite, removeFavorite, isMutating } = useFavorites();
   const [needLogin, setNeedLogin] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fav = favorites.find((f) => f.game.itadId === itadId);
   const isFav = Boolean(fav);
 
   async function onClick() {
+    setError(null);
     if (!user) {
       setNeedLogin(true);
       return;
     }
-    if (fav) {
-      await removeFavorite(fav.id);
-    } else {
-      await addFavorite(itadId);
+    setNeedLogin(false);
+    try {
+      if (fav) {
+        await removeFavorite(fav.id);
+      } else {
+        await addFavorite(itadId);
+      }
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'İşlem başarısız.');
     }
   }
 
@@ -34,7 +42,7 @@ export function FavoriteButton({ itadId }: { itadId: string }) {
         variant={isFav ? 'secondary' : 'outline'}
         size="sm"
         aria-pressed={isFav}
-        aria-label={isFav ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+        aria-label={isFav ? 'Favoride, favorilerden çıkar' : 'Favorile, favorilere ekle'}
         disabled={isMutating}
         onClick={() => void onClick()}
       >
@@ -48,6 +56,11 @@ export function FavoriteButton({ itadId }: { itadId: string }) {
             giriş yap
           </Link>
           .
+        </p>
+      )}
+      {error && (
+        <p role="alert" className="font-mono text-xs text-destructive">
+          {error}
         </p>
       )}
     </div>

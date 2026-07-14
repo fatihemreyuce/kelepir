@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { FavoriteButton } from '../FavoriteButton';
 import { useFavorites } from '@/hooks/use-favorites';
 import { useAuth } from '@/context/auth-context';
+import { ApiError } from '@/lib/api';
 
 vi.mock('@/hooks/use-favorites', () => ({ useFavorites: vi.fn() }));
 vi.mock('@/context/auth-context', () => ({ useAuth: vi.fn() }));
@@ -53,5 +54,13 @@ describe('FavoriteButton', () => {
     await userEvent.click(screen.getByRole('button'));
     expect(addFavorite).not.toHaveBeenCalled();
     expect(screen.getByText(/giriş yap/i)).toBeInTheDocument();
+  });
+
+  it('addFavorite başarısız olunca hata mesajı gösterir, hata fırlatmaz', async () => {
+    addFavorite.mockRejectedValueOnce(new ApiError(409, 'Bu oyun zaten favorilerde'));
+    mockFavorites([]);
+    render(<FavoriteButton itadId="abc" />);
+    await userEvent.click(screen.getByRole('button'));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Bu oyun zaten favorilerde');
   });
 });
