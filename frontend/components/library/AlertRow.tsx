@@ -16,9 +16,9 @@ export function AlertRow({
 }) {
   const { game } = alert;
   return (
-    <li className="flex items-center justify-between gap-4 rounded-lg border border-line bg-surface px-4 py-3">
+    <li className="flex items-center justify-between gap-4 rounded-xl border border-line bg-surface px-4 py-3">
       <Link href={`/oyun/${game.itadId}`} className="flex items-center gap-3 hover:text-coral">
-        <span className="flex h-12 w-9 shrink-0 items-center justify-center overflow-hidden rounded bg-surface-2">
+        <span className="flex h-14 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-2">
           {game.cover ? (
             <img src={game.cover} alt={game.title} className="h-full w-full object-cover" />
           ) : (

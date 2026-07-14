@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
 import { useFavorites } from '@/hooks/use-favorites';
 import { AuthGate } from '@/components/library/AuthGate';
 import { FavoriteCard } from '@/components/library/FavoriteCard';
+import { EmptyState } from '@/components/library/EmptyState';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FavorilerPage() {
@@ -35,12 +35,15 @@ export default function FavorilerPage() {
           </button>
         </p>
       ) : favorites.length === 0 ? (
-        <p className="mt-6 font-mono text-sm text-muted-2">
-          Henüz favori yok.{' '}
-          <Link href="/" className="text-coral hover:underline">
-            Bir oyun bul
-          </Link>
-        </p>
+        <div className="mt-6">
+          <EmptyState
+            icon="🏷️"
+            title="Henüz favori yok"
+            description="Beğendiğin oyunları kaydet, fiyatları hep göz önünde olsun."
+            ctaHref="/"
+            ctaLabel="Oyun ara"
+          />
+        </div>
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {favorites.map((f) => (

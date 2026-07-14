@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
 import { useAlerts } from '@/hooks/use-alerts';
 import { AuthGate } from '@/components/library/AuthGate';
 import { AlertRow } from '@/components/library/AlertRow';
+import { EmptyState } from '@/components/library/EmptyState';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AlarmlarimPage() {
@@ -35,12 +35,15 @@ export default function AlarmlarimPage() {
           </button>
         </p>
       ) : alerts.length === 0 ? (
-        <p className="mt-6 font-mono text-sm text-muted-2">
-          Henüz alarm yok.{' '}
-          <Link href="/" className="text-coral hover:underline">
-            Bir oyun bul
-          </Link>
-        </p>
+        <div className="mt-6">
+          <EmptyState
+            icon="🔔"
+            title="Henüz alarm yok"
+            description="Bir oyunda hedef fiyat belirle, altına düşünce e-posta atalım."
+            ctaHref="/"
+            ctaLabel="Oyun ara"
+          />
+        </div>
       ) : (
         <ul className="mt-6 flex flex-col gap-2">
           {alerts.map((a) => (
