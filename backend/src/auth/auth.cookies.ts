@@ -4,7 +4,9 @@ const isProd = () => process.env.NODE_ENV === 'production';
 
 const base = () => ({
   httpOnly: true,
-  sameSite: 'lax' as const,
+  // Ayrık deploy'da frontend ve backend farklı site'larda olur; cross-site
+  // isteklerde cookie'nin gönderilmesi için prod'da 'none' + secure şart.
+  sameSite: isProd() ? ('none' as const) : ('lax' as const),
   secure: isProd(),
   path: '/',
 });
