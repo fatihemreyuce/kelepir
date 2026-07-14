@@ -76,23 +76,39 @@ export function GameDetail({
     );
   }
 
-  const cheapest =
-    data.prices.find((p) => p.isCheapest)?.price ?? data.prices[0]?.price;
+  const rows = data.prices;
+  const cheapestRow = rows.find((p) => p.isCheapest) ?? rows[0];
+  const cheapest = cheapestRow?.price;
+  const highest = rows.length ? Math.max(...rows.map((r) => r.price)) : undefined;
+  const savings =
+    cheapest !== undefined && highest !== undefined ? highest - cheapest : undefined;
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16">
+    <main className="mx-auto max-w-5xl px-6 py-12">
       <GameHeader
         title={data.game.title}
         cover={data.game.cover}
         region={region}
         onRegionChange={onRegionChange}
+        storeCount={rows.length}
+        cheapestPrice={cheapest}
+        cheapestCut={cheapestRow?.cut}
+        savings={savings && savings > 0 ? savings : undefined}
+        currency={data.currency}
+        favoriteSlot={<FavoriteButton itadId={itadId} />}
       />
-      <div className="mt-4">
-        <FavoriteButton itadId={itadId} />
+      <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <section>
+          <h2 className="font-mono text-xs uppercase tracking-widest text-muted-2">
+            Nereden alınır
+          </h2>
+          <PriceTable prices={data.prices} currency={data.currency} />
+        </section>
+        <div className="flex flex-col gap-6">
+          <PriceHistoryChart itadId={itadId} region={region} currency={data.currency} />
+          <AlertForm key={region} itadId={itadId} region={region} cheapestPrice={cheapest} />
+        </div>
       </div>
-      <PriceTable prices={data.prices} currency={data.currency} />
-      <PriceHistoryChart itadId={itadId} region={region} currency={data.currency} />
-      <AlertForm key={region} itadId={itadId} region={region} cheapestPrice={cheapest} />
     </main>
   );
 }

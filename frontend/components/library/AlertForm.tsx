@@ -54,7 +54,7 @@ export function AlertForm({
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="mt-8 rounded-lg border border-line bg-surface p-4">
+    <form onSubmit={onSubmit} noValidate className="rounded-xl border border-line bg-surface p-4">
       <h2 className="font-display text-sm font-semibold text-bone">Fiyat alarmı kur</h2>
       <p className="mt-1 font-mono text-xs text-muted-2">
         {region} bölgesinde hedef fiyatın altına düşünce e-posta al.
