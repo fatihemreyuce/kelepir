@@ -25,11 +25,25 @@ export interface GamePrices {
   prices: GamePriceRow[];
 }
 
+export interface GameHistoryPoint {
+  date: string;
+  price: number;
+}
+
+export interface GameHistory {
+  region: string;
+  points: GameHistoryPoint[];
+}
+
 export const gamesApi = {
   search: (q: string) =>
     api<SearchItem[]>(`/games/search?q=${encodeURIComponent(q)}`),
   prices: (itadId: string, region: string) =>
     api<GamePrices>(
       `/games/${encodeURIComponent(itadId)}/prices?region=${encodeURIComponent(region)}`,
+    ),
+  history: (itadId: string, region: string) =>
+    api<GameHistory>(
+      `/games/${encodeURIComponent(itadId)}/history?region=${encodeURIComponent(region)}`,
     ),
 };

@@ -32,4 +32,15 @@ describe('gamesApi', () => {
     const [url] = fetchMock.mock.calls[0];
     expect(url).toBe('http://api.test/games/abc123/prices?region=US');
   });
+
+  it('history: itadId ve region ile GET atar', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ region: 'TR', points: [] }),
+    });
+    await gamesApi.history('abc123', 'TR');
+    const [url] = fetchMock.mock.calls[0];
+    expect(url).toBe('http://api.test/games/abc123/history?region=TR');
+  });
 });
