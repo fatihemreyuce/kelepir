@@ -33,4 +33,19 @@ describe('PriceHistoryChart', () => {
     );
     expect(container).toBeEmptyDOMElement();
   });
+
+  it('yeterli veri varsa 90 günün en düşüğünü gösterir', () => {
+    mockHook.mockReturnValue({
+      points: [
+        { date: '2026-07-10', price: 200 },
+        { date: '2026-07-11', price: 149 },
+        { date: '2026-07-12', price: 180 },
+      ],
+      isPending: false,
+      isError: false,
+    });
+    render(<PriceHistoryChart itadId="i" region="TR" currency="TRY" />);
+    expect(screen.getByText(/90 günün en düşüğü/i)).toBeInTheDocument();
+    expect(screen.getByText(/149/)).toBeInTheDocument();
+  });
 });
