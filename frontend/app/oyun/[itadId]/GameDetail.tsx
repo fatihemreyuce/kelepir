@@ -7,6 +7,7 @@ import { gamesApi } from '@/lib/games-api';
 import { ApiError } from '@/lib/api';
 import { GameHeader } from '@/components/games/GameHeader';
 import { PriceTable } from '@/components/games/PriceTable';
+import { PriceHistoryChart } from '@/components/games/PriceHistoryChart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FavoriteButton } from '@/components/library/FavoriteButton';
 import { AlertForm } from '@/components/library/AlertForm';
@@ -90,6 +91,7 @@ export function GameDetail({
         <FavoriteButton itadId={itadId} />
       </div>
       <PriceTable prices={data.prices} currency={data.currency} />
+      <PriceHistoryChart itadId={itadId} region={region} currency={data.currency} />
       <AlertForm key={region} itadId={itadId} region={region} cheapestPrice={cheapest} />
     </main>
   );
