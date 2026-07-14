@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Input } from '@/components/ui/input';
 import { SearchResults } from './SearchResults';
+import { PopularChips } from './PopularChips';
 
 export function SearchBox() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export function SearchBox() {
         aria-label="Oyun ara"
         className="h-12 max-w-xl font-mono text-base"
       />
+      {value.trim().length < 2 && <PopularChips onPick={setValue} />}
       <SearchResults query={debounced} />
     </div>
   );
