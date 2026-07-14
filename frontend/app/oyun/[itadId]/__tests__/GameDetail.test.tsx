@@ -17,6 +17,13 @@ vi.mock('@/lib/games-api', () => ({
   gamesApi: { prices: vi.fn() },
 }));
 
+vi.mock('@/components/library/FavoriteButton', () => ({
+  FavoriteButton: () => <div data-testid="favorite-button" />,
+}));
+vi.mock('@/components/library/AlertForm', () => ({
+  AlertForm: () => <div data-testid="alert-form" />,
+}));
+
 function renderWithClient(ui: React.ReactElement) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -69,5 +76,12 @@ describe('GameDetail', () => {
       expect.stringContaining('region=DE'),
       { scroll: false },
     );
+  });
+
+  it('veri yüklendiğinde favori butonu ve alarm formunu gösterir', async () => {
+    vi.mocked(gamesApi.prices).mockResolvedValue(validPrices);
+    renderWithClient(<GameDetail itadId="abc" region="TR" />);
+    expect(await screen.findByTestId('favorite-button')).toBeInTheDocument();
+    expect(screen.getByTestId('alert-form')).toBeInTheDocument();
   });
 });

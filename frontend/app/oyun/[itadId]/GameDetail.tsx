@@ -8,6 +8,8 @@ import { ApiError } from '@/lib/api';
 import { GameHeader } from '@/components/games/GameHeader';
 import { PriceTable } from '@/components/games/PriceTable';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FavoriteButton } from '@/components/library/FavoriteButton';
+import { AlertForm } from '@/components/library/AlertForm';
 
 export function GameDetail({
   itadId,
@@ -73,6 +75,9 @@ export function GameDetail({
     );
   }
 
+  const cheapest =
+    data.prices.find((p) => p.isCheapest)?.price ?? data.prices[0]?.price;
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
       <GameHeader
@@ -81,7 +86,11 @@ export function GameDetail({
         region={region}
         onRegionChange={onRegionChange}
       />
+      <div className="mt-4">
+        <FavoriteButton itadId={itadId} />
+      </div>
       <PriceTable prices={data.prices} currency={data.currency} />
+      <AlertForm itadId={itadId} region={region} cheapestPrice={cheapest} />
     </main>
   );
 }
