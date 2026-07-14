@@ -16,4 +16,9 @@ export class GamesController {
   prices(@Param('itadId') itadId: string, @Query() query: PricesQueryDto) {
     return this.games.getGamePrices(itadId, query.region);
   }
+
+  @Get(':itadId/history')
+  history(@Param('itadId') itadId: string, @Query() query: PricesQueryDto) {
+    return this.games.getGameHistory(itadId, query.region);
+  }
 }

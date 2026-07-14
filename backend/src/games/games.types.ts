@@ -22,3 +22,13 @@ export interface GamePrices {
   currency: string | null;
   prices: GamePriceRow[];
 }
+
+export interface GameHistoryPoint {
+  date: string;
+  price: number;
+}
+
+export interface GameHistory {
+  region: string;
+  points: GameHistoryPoint[];
+}
