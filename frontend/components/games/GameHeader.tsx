@@ -81,7 +81,7 @@ export function GameHeader({
               )}
             </div>
             <div>
-              <h1 className="font-display text-3xl font-extrabold tracking-tight text-white drop-shadow-lg sm:text-4xl">
+              <h1 className="font-display text-3xl font-extrabold tracking-tight text-white [text-shadow:0_1px_12px_rgba(0,0,0,.55)] sm:text-4xl">
                 {title}
               </h1>
               <p className="mt-1 font-mono text-xs text-bone/70">
@@ -101,7 +101,7 @@ export function GameHeader({
               <p className="font-mono text-[10px] uppercase tracking-widest text-savings">
                 şu an en ucuz
               </p>
-              <p className="font-display text-2xl font-extrabold text-white drop-shadow">
+              <p className="font-display text-2xl font-extrabold text-white">
                 {formatPrice(cheapestPrice, currency)}
               </p>
               {(cheapestCut || savings) && (

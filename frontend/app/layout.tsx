@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body className="min-h-screen bg-ink text-bone">
+      <body className="min-h-screen bg-ink text-bone antialiased">
         <Providers>
           <AuthProvider>
             <div className="flex min-h-screen flex-col">

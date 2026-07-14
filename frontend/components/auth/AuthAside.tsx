@@ -31,12 +31,12 @@ export function AuthAside() {
           <span className="inline-block size-2 rounded-full bg-savings shadow-[0_0_8px_#2fbf71]" />
           gece pazarı açık
         </p>
-        <h2 className="font-display text-4xl font-extrabold leading-tight text-white drop-shadow-lg">
+        <h2 className="font-display text-4xl font-extrabold leading-tight text-white [text-shadow:0_2px_16px_rgba(0,0,0,.6)]">
           En ucuzu bul.
           <br />
           Kelepiri kaçırma.
         </h2>
-        <p className="max-w-sm font-body text-sm text-bone/80 drop-shadow">
+        <p className="max-w-sm font-body text-sm text-bone/80 [text-shadow:0_1px_10px_rgba(0,0,0,.7)]">
           Steam, Epic, GOG ve fazlasında fiyatları karşılaştır. Hedef fiyata
           düşünce sana haber verelim.
         </p>
