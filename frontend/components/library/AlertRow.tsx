@@ -16,8 +16,11 @@ export function AlertRow({
 }) {
   const { game } = alert;
   return (
-    <li className="flex items-center justify-between gap-4 rounded-xl border border-line bg-surface px-4 py-3">
-      <Link href={`/oyun/${game.itadId}`} className="flex items-center gap-3 hover:text-coral">
+    <li className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3">
+      <Link
+        href={`/oyun/${game.itadId}`}
+        className="flex min-w-0 flex-1 items-center gap-3 hover:text-coral"
+      >
         <span className="flex h-14 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-2">
           {game.cover ? (
             <img src={game.cover} alt={game.title} className="h-full w-full object-cover" />
@@ -27,10 +30,12 @@ export function AlertRow({
             </span>
           )}
         </span>
-        <span className="font-body text-sm text-bone">{game.title}</span>
+        <span className="truncate font-body text-sm text-bone">{game.title}</span>
       </Link>
-      <div className="flex items-center gap-4">
-        <span className="font-mono text-xs text-muted-2">{alert.region}</span>
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <span className="hidden font-mono text-xs text-muted-2 sm:inline">
+          {alert.region}
+        </span>
         {alert.isActive && (
           <span className="rounded bg-savings px-2 py-0.5 font-mono text-xs font-bold text-ink">
             aktif
