@@ -84,7 +84,7 @@ export function GameDetail({
     cheapest !== undefined && highest !== undefined ? highest - cheapest : undefined;
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
       <GameHeader
         title={data.game.title}
         cover={data.game.cover}
