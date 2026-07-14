@@ -80,7 +80,7 @@ export function AlertForm({
         </p>
       )}
       {needLogin && (
-        <p className="mt-2 font-mono text-xs text-muted-2">
+        <p role="status" className="mt-2 font-mono text-xs text-muted-2">
           Önce{' '}
           <Link href="/giris" className="text-coral hover:underline">
             giriş yap
@@ -89,7 +89,7 @@ export function AlertForm({
         </p>
       )}
       {done && (
-        <p className="mt-2 font-mono text-xs text-savings">
+        <p role="status" className="mt-2 font-mono text-xs text-savings">
           Alarm kuruldu.{' '}
           <Link href="/alarmlarim" className="text-coral hover:underline">
             Alarmlarım

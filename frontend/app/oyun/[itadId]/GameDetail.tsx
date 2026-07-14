@@ -90,7 +90,7 @@ export function GameDetail({
         <FavoriteButton itadId={itadId} />
       </div>
       <PriceTable prices={data.prices} currency={data.currency} />
-      <AlertForm itadId={itadId} region={region} cheapestPrice={cheapest} />
+      <AlertForm key={region} itadId={itadId} region={region} cheapestPrice={cheapest} />
     </main>
   );
 }

@@ -50,7 +50,7 @@ export function FavoriteButton({ itadId }: { itadId: string }) {
         {isFav ? 'Favoride' : 'Favorile'}
       </Button>
       {needLogin && (
-        <p className="font-mono text-xs text-muted-2">
+        <p role="status" className="font-mono text-xs text-muted-2">
           Önce{' '}
           <Link href="/giris" className="text-coral hover:underline">
             giriş yap
