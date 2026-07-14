@@ -1,8 +1,11 @@
+import { cn } from '@/lib/utils';
+
 interface KelepirStampProps {
   discount: number; // ör. 70 -> "-%70"
   price?: string; // ör. "149,99 ₺"
   regular?: string; // üstü çizili
   label?: string; // varsayılan "EN UCUZ"
+  tone?: 'coral' | 'savings'; // coral = normal etiket, savings = "düştü" yeşil
   className?: string;
 }
 
@@ -11,11 +14,18 @@ export function KelepirStamp({
   price,
   regular,
   label = 'EN UCUZ',
+  tone = 'coral',
   className = '',
 }: KelepirStampProps) {
   return (
     <div
-      className={`relative inline-flex -rotate-3 flex-col rounded-lg border border-coral/40 bg-coral px-5 py-4 text-coral-ink shadow-lg ${className}`}
+      className={cn(
+        'relative inline-flex -rotate-3 flex-col rounded-lg border px-5 py-4 text-coral-ink shadow-lg',
+        tone === 'savings'
+          ? 'border-savings/40 bg-savings'
+          : 'border-coral/40 bg-coral',
+        className,
+      )}
       role="img"
       aria-label={`${label}: yüzde ${discount} indirim${price ? `, ${price}` : ''}`}
     >
